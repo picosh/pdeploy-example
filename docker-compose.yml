@@ -1,0 +1,22 @@
+services:
+  echo:
+    build: .
+    networks:
+      - default
+      - pdeploy-ingress
+    labels:
+      traefik.enable: true
+      traefik.http.routers.echo.rule: Host(`echo-antonio.pdeploy.mik.qa`)
+  httpbin:
+    image: kennethreitz/httpbin
+    command: gunicorn -b 0.0.0.0:80 httpbin:app -k gevent --access-logfile -
+    networks:
+      - default
+      - pdeploy-ingress
+    labels:
+      traefik.enable: true
+      traefik.http.routers.http.rule: Host(`http-antonio.pdeploy.mik.qa`)
+
+networks:
+  pdeploy-ingress:
+    external: true
